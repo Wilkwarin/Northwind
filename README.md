@@ -18,65 +18,68 @@ Zdrojové dáta pochádzajú z datasetu Northwind dostupného [tu](https://edu.u
 - customers
 
 Categories — obsahuje informácie o kategóriách produktov:
-    CategoryID — unikátny identifikátor kategórie.
-    CategoryName — názov kategórie.
-    Description — popis kategórie.
+- CategoryID — unikátny identifikátor kategórie.
+- CategoryName — názov kategórie.
+- Description — popis kategórie.
 
 Customers — údaje o zákazníkoch:
-    CustomerID — unikátny identifikátor zákazníka.
-    CustomerName — názov organizácie alebo meno zákazníka.
-    ContactName — kontaktná osoba.
-    Address — adresa zákazníka.
-    City — mesto zákazníka.
-    PostalCode — poštové smerovacie číslo.
-    Country — krajina zákazníka.
+- CustomerID — unikátny identifikátor zákazníka.
+- CustomerName — názov organizácie alebo meno zákazníka.
+- ContactName — kontaktná osoba.
+- Address — adresa zákazníka.
+- City — mesto zákazníka.
+- PostalCode — poštové smerovacie číslo.
+- Country — krajina zákazníka.
 
 Employees — informácie o zamestnancoch:
-    EmployeeID — unikátny identifikátor zamestnanca.
-    LastName — priezvisko zamestnanca.
-    FirstName — meno zamestnanca.
-    BirthDate — dátum narodenia zamestnanca.
-    Photo — cesta k obrázku zamestnanca.
-    Notes — dodatočné poznámky o zamestnancovi.
+- EmployeeID — unikátny identifikátor zamestnanca.
+- LastName — priezvisko zamestnanca.
+- FirstName — meno zamestnanca.
+- BirthDate — dátum narodenia zamestnanca.
+- Photo — cesta k obrázku zamestnanca.
+- Notes — dodatočné poznámky o zamestnancovi.
 
 Shippers — údaje o spoločnostiach, ktoré zabezpečujú prepravu:
-    ShipperID — unikátny identifikátor dopravcu.
-    ShipperName — názov spoločnosti.
-    Phone — kontaktné telefónne číslo.
+- ShipperID — unikátny identifikátor dopravcu.
+- ShipperName — názov spoločnosti.
+- Phone — kontaktné telefónne číslo.
 
 Suppliers — informácie o dodávateľoch:
-    SupplierID — unikátny identifikátor dodávateľa.
-    SupplierName — názov spoločnosti dodávateľa.
-    ContactName — kontaktná osoba dodávateľa.
-    Address — adresa dodávateľa.
-    City — mesto dodávateľa.
-    PostalCode — poštové smerovacie číslo.
-    Country — krajina dodávateľa.
-    Phone — kontaktné telefónne číslo.
+- SupplierID — unikátny identifikátor dodávateľa.
+- SupplierName — názov spoločnosti dodávateľa.
+- ContactName — kontaktná osoba dodávateľa.
+- Address — adresa dodávateľa.
+- City — mesto dodávateľa.
+- PostalCode — poštové smerovacie číslo.
+- Country — krajina dodávateľa.
+- Phone — kontaktné telefónne číslo.
 
 Products — obsahuje informácie o produktoch:
-    ProductID — unikátny identifikátor produktu.
-    ProductName — názov produktu.
-    SupplierID — identifikátor dodávateľa (vzťah s tabuľkou Suppliers).
-    CategoryID — identifikátor kategórie produktu (vzťah s tabuľkou Categories).
-    Unit — jednotka merania produktu.
-    Price — cena produktu.
+- ProductID — unikátny identifikátor produktu.
+- ProductName — názov produktu.
+- SupplierID — identifikátor dodávateľa (vzťah s tabuľkou Suppliers).
+- CategoryID — identifikátor kategórie produktu (vzťah s tabuľkou Categories).
+- Unit — jednotka merania produktu.
+- Price — cena produktu.
 
 Orders — údaje o objednávkach:
-    OrderID — unikátny identifikátor objednávky.
-    CustomerID — identifikátor zákazníka, ktorý zadal objednávku (vzťah s tabuľkou Customers).
-    EmployeeID — identifikátor zamestnanca, ktorý spracoval objednávku (vzťah s tabuľkou Employees).
-    OrderDate — dátum zadania objednávky.
-    ShipperID — identifikátor dopravcu, ktorý doručil objednávku (vzťah s tabuľkou Shippers).
+- OrderID — unikátny identifikátor objednávky.
+- CustomerID — identifikátor zákazníka, ktorý zadal objednávku (vzťah s tabuľkou Customers).
+- EmployeeID — identifikátor zamestnanca, ktorý spracoval objednávku (vzťah s tabuľkou Employees).
+- OrderDate — dátum zadania objednávky.
+- ShipperID — identifikátor dopravcu, ktorý doručil objednávku (vzťah s tabuľkou Shippers).
 
 OrderDetails — podrobnosti objednávok:
-    OrderDetailID — unikátny identifikátor záznamu.
-    OrderID — identifikátor objednávky (vzťah s tabuľkou Orders).
-    ProductID — identifikátor produktu (vzťah s tabuľkou Products).
-    Quantity — množstvo objednaného produktu.
+- OrderDetailID — unikátny identifikátor záznamu.
+- OrderID — identifikátor objednávky (vzťah s tabuľkou Orders).
+- ProductID — identifikátor produktu (vzťah s tabuľkou Products).
+- Quantity — množstvo objednaného produktu.
 
 Účelom ETL procesu bolo tieto dáta pripraviť, transformovať a sprístupniť pre viacdimenzionálnu analýzu.
 
 ### 1.1 Dátová architektúra
 ERD diagram
 Surové dáta sú usporiadané v relačnom modeli, ktorý je znázornený na entitno-relačnom diagrame (ERD):
+
+![Obrázok 1 Entitno-relačná schéma Northwind_ERD](https://github.com/Wilkwarin/Walmart_Sales_Forecast-ETL/blob/main/Northwind_ERD.png)
+
