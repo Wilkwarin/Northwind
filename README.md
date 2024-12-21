@@ -81,5 +81,10 @@ OrderDetails — podrobnosti objednávok:
 ERD diagram
 Surové dáta sú usporiadané v relačnom modeli, ktorý je znázornený na entitno-relačnom diagrame (ERD):
 
-![Obrázok 1 Entitno-relačná schéma Northwind_ERD](https://github.com/Wilkwarin/Walmart_Sales_Forecast-ETL/blob/main/Northwind_ERD.png)
+![Entitno-relačná schéma Northwind_ERD](https://github.com/Wilkwarin/Walmart_Sales_Forecast-ETL/blob/main/Northwind_ERD.png)
 
+*Obrázok 1 Entitno-relačná schéma Northwind_ERD*
+
+---
+
+# 2 Dimenzionálny model
