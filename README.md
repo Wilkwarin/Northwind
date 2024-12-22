@@ -91,11 +91,47 @@ Surové dáta sú usporiadané v relačnom modeli, ktorý je znázornený na ent
 
 Navrhnutý bol hviezdicový model (star schema), kde centrálny bod predstavuje faktová tabuľka Fact_Sales, ktorá je prepojená s nasledujúcimi dimenziami:
 
-- DM_Products: Obsahuje podrobné informácie o produktoch, ako sú názov produktu, kategória, jednotka merania a cena.
-- DM_Suppliers: Obsahuje informácie o dodávateľoch, vrátane mesta a krajiny, kde sídlia.
-- DM_Customers: Obsahuje geografické údaje o zákazníkoch, ako sú mesto a krajina, odkiaľ pochádzajú.
-- DM_Employees: Obsahuje informácie o zamestnancoch, konkrétne ich vek, ktorý bol vypočítaný na základe dátumu narodenia.
-- DM_Date: Zahrňuje informácie o dátumoch objednávok vrátane presného dátumu, roku, mesiaca a dňa.
+### Popis faktovej tabuľky: Fact_Sales
+
+Faktová tabuľka Fact_Sales obsahuje nasledujúce kľúče a metriky:
+
+Primárny kľúč:
+- SaleID — jedinečný identifikátor transakcie.
+
+Cudzie kľúče:
+- OrderID — identifikátor objednávky.
+- ShipperID — identifikátor prepravcu.
+- ProductID — identifikátor produktu (prepojenie s dimenziou DM_Products).
+- SupplierID — identifikátor dodávateľa (prepojenie s dimenziou DM_Suppliers).
+- CustomerID — identifikátor zákazníka (prepojenie s dimenziou DM_Customers).
+- EmployeeID — identifikátor zamestnanca (prepojenie s dimenziou DM_Employees).
+- DateID — identifikátor dátumu objednávky (prepojenie s dimenziou DM_Date).
+
+Metriky:
+- Quantity — počet predaných jednotiek produktu.
+- Suma — celková suma transakcie, vypočítaná ako Quantity * Cena (kde Cena pochádza z DM_Products).
+
+### Popis dimenzií a ich prepojenia s faktovou tabuľkou
+
+DM_Products:
+- Obsahuje informácie o produktoch vrátane názvu (ProductName), kategórie (ProductCategory), jednotky (Unit) a ceny (Price).
+- Typ dimenzie: SCD typu 1 (Slowly Changing Dimension Type 1 - Keď sa údaje v dimenzii zmenia, staré údaje sú úplne nahradené novými. História zmien sa pritom neuchováva).
+
+DM_Suppliers:
+- Obsahuje informácie o dodávateľoch vrátane mesta (City) a krajiny (Country).
+- Typ dimenzie: SCD typu 1 (aktuálne údaje).
+
+DM_Customers:
+- Obsahuje geografické údaje o zákazníkoch, ako sú mesto (City) a krajina (Country).
+- Typ dimenzie: SCD typu 1 (aktuálne údaje).
+
+DM_Employees:
+- Obsahuje údaje o zamestnancoch, konkrétne ich vek (Age) v čase spracovania objednávky.
+- Typ dimenzie: SCD typu 1 (aktuálne údaje).
+
+DM_Date:
+- Obsahuje informácie o dátumoch objednávok (OrderDate), vrátane roku (Year), mesiaca (Month) a dňa (Day).
+- Typ dimenzie: Statická (nemenná - údaje v dimenzii sa časom nemenia).
 
 Štruktúra hviezdicového modelu je znázornená na diagrame nižšie. Diagram ukazuje prepojenia medzi faktovou tabuľkou a dimenziami, čo zjednodušuje pochopenie a implementáciu modelu.
 
