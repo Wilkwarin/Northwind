@@ -81,10 +81,26 @@ OrderDetails — podrobnosti objednávok:
 ERD diagram
 Surové dáta sú usporiadané v relačnom modeli, ktorý je znázornený na entitno-relačnom diagrame (ERD):
 
-![Entitno-relačná schéma Northwind_ERD](https://github.com/Wilkwarin/Walmart_Sales_Forecast-ETL/blob/main/Northwind_ERD.png)
+![Entitno-relačná schéma Northwind_ERD](https://github.com/Wilkwarin/Northwind/blob/main/Northwind_ERD.png)
 
 *Obrázok 1 Entitno-relačná schéma Northwind_ERD*
 
 ---
 
-# 2 Dimenzionálny model
+# 2 Návrh dimenzionálneho modelu
+
+Navrhnutý bol hviezdicový model (star schema), kde centrálny bod predstavuje faktová tabuľka Fact_Sales, ktorá je prepojená s nasledujúcimi dimenziami:
+
+- DM_Products: Obsahuje podrobné informácie o produktoch, ako sú názov produktu, kategória, jednotka merania a cena.
+- DM_Suppliers: Obsahuje informácie o dodávateľoch, vrátane mesta a krajiny, kde sídlia.
+- DM_Customers: Obsahuje geografické údaje o zákazníkoch, ako sú mesto a krajina, odkiaľ pochádzajú.
+- DM_Employees: Obsahuje informácie o zamestnancoch, konkrétne ich vek, ktorý bol vypočítaný na základe dátumu narodenia.
+- DM_Date: Zahrňuje informácie o dátumoch objednávok vrátane presného dátumu, roku, mesiaca a dňa.
+
+Štruktúra hviezdicového modelu je znázornená na diagrame nižšie. Diagram ukazuje prepojenia medzi faktovou tabuľkou a dimenziami, čo zjednodušuje pochopenie a implementáciu modelu.
+
+![Obrázok 2 Schéma hviezdy pre NorthWind](https://github.com/Wilkwarin/Northwind/blob/main/Obr%C3%A1zok%202%20Sch%C3%A9ma%20hviezdy%20pre%20NorthWind.png)
+
+*Obrázok 2 Schéma hviezdy pre NorthWind*
+
+---
