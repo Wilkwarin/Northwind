@@ -444,8 +444,115 @@ DROP TABLE IF EXISTS Temp_Categories;
 DROP TABLE IF EXISTS Temp_OrderDetails;
 ```
 ETL proces v Snowflake umožnil spracovanie pôvodných dát z .csv formátu do viacdimenzionálneho modelu typu hviezda. Tento proces zahŕňal čistenie, obohacovanie a reorganizáciu údajov. Výsledný model umožňuje analýzu predajov, správanie zákazníkov a výkonnosť zamestnancov, pričom poskytuje základ pre vizualizácie a reporty.
+
 ---
 # 4. Vizualizácia dát.
 
+V tejto časti je predstavených 5 grafov, ktoré odpovedajú na dôležité otázky a odhaľujú kľúčové metriky predajov, zákazníkov a dodávateľov. Každý graf je založený na SQL dotaze, ktorý spracováva údaje v dimenzionálnom modeli typu hviezda.
 
+Dashboard obsahuje 5 vizualizácií, ktoré poskytujú základný prehľad o kľúčových metrikách a trendoch týkajúcich sa predajov, zákazníkov a produktov.
 
+![Dashboard](https://github.com/Wilkwarin/Northwind/blob/main/Dashboard.jpg)
+
+## 4.1 Rozdelenie predajov podľa mesiacov
+
+Tento graf zobrazuje rozdelenie celkových tržieb podľa mesiacov v jednotlivých rokoch.
+
+Pomáha odpovedať na otázku: V ktorých mesiacoch spoločnosť dosahuje najvyššie tržby?
+
+![Graf 1.](https://github.com/Wilkwarin/Northwind/blob/main/Graf%201.%20Rozdelenie%20predajov%20pod%C4%BEa%20mesiacov.jpg)
+
+```sql
+SELECT 
+    CONCAT(YEAR(d.OrderDate), '-', LPAD(MONTH(d.OrderDate), 2, '0')) AS YearMonth,
+    YEAR(d.OrderDate) AS Year,
+    MONTH(d.OrderDate) AS Month,
+    SUM(f.Suma) AS TotalSum
+FROM Fact_Sales f
+JOIN DM_Date d ON f.DateID = d.DateID
+GROUP BY 
+    YEAR(d.OrderDate), 
+    MONTH(d.OrderDate)
+ORDER BY 
+    YEAR(d.OrderDate), 
+    MONTH(d.OrderDate);
+```
+## 4.2 Top 10 najväčších zákazníkov podľa tržieb
+
+Tento graf zobrazuje najväčších zákazníkov podľa celkových tržieb.
+
+Pomáha odpovedať na otázku: Ktorí zákazníci prinášajú spoločnosti najviac peňazí?
+
+![Graf 2.](https://github.com/Wilkwarin/Northwind/blob/main/Graf%202.%20Top%2010%20najv%C3%A4%C4%8D%C5%A1%C3%ADch%20z%C3%A1kazn%C3%ADkov%20pod%C4%BEa%20tr%C5%BEieb.jpg)
+
+```sql
+SELECT 
+    CustomerID, 
+    SUM(Suma) AS TotalRevenue
+FROM Fact_Sales
+GROUP BY 
+    CustomerID
+ORDER BY 
+    TotalRevenue DESC
+LIMIT 10;
+```
+## 4.3 Top 10 najziskovejších produktov
+
+Tento graf zobrazuje produkty, ktoré generujú najvyššie tržby.
+
+Pomáha odpovedať na otázku: Ktoré produkty sú pre spoločnosť najziskovejšie?
+
+![Graf 3.](https://github.com/Wilkwarin/Northwind/blob/main/Graf%203.%20Top%2010%20najziskovej%C5%A1%C3%ADch%20produktov.jpg)
+
+```sql
+SELECT 
+    p.ProductName, 
+    SUM(f.Suma) AS TotalRevenue
+FROM Fact_Sales f
+JOIN DM_Products p ON f.ProductID = p.ProductID
+GROUP BY p.ProductName
+ORDER BY TotalRevenue DESC
+LIMIT 10;
+```
+## 4.4 Počet nákupov podľa miest zákazníkov
+
+Tento graf zobrazuje mestá, v ktorých zákazníci uskutočňujú najviac nákupov.
+
+Pomáha odpovedať na otázku: V ktorých mestách je najvyššia aktivita zákazníkov?
+
+![Graf 4.](https://github.com/Wilkwarin/Northwind/blob/main/Graf%204.%20Po%C4%8Det%20n%C3%A1kupov%20pod%C4%BEa%20miest%20z%C3%A1kazn%C3%ADkov.jpg)
+
+```sql
+SELECT 
+    c.City AS CustomerCity, 
+    COUNT(f.OrderID) AS TotalOrders
+FROM Fact_Sales f
+JOIN DM_Customers c ON f.CustomerID = c.CustomerID
+GROUP BY c.City
+ORDER BY TotalOrders DESC
+LIMIT 10;
+```
+## 4.5 Počet dodávok podľa prepravcov
+
+Tento graf zobrazuje počet dodávok, ktoré realizovali jednotliví prepravcovia. 
+
+Pomáha odpovedať na otázku: Ktorí prepravcovia zabezpečujú najväčší objem dodávok?
+
+![Graf 5.](https://github.com/Wilkwarin/Northwind/blob/main/Graf%205.%20Po%C4%8Det%20dod%C3%A1vok%20pod%C4%BEa%20prepravcov.jpg)
+
+```sql
+SELECT 
+    ShipperID, 
+    COUNT(OrderID) AS TotalShipments
+FROM Fact_Sales f
+GROUP BY ShipperID
+ORDER BY ShipperID;
+```
+# Odkazy
+[Snowflake](https://app.snowflake.com/)
+
+Diagrama bola vytvorená v programe [MySQLWorkbench](https://www.mysql.com/products/workbench/)
+
+---
+
+Autor projektu: Mariia Shorokhova
