@@ -131,7 +131,7 @@ DM_Date:
 
 Štruktúra hviezdicového modelu je znázornená na diagrame nižšie. Diagram ukazuje prepojenia medzi faktovou tabuľkou a dimenziami, čo zjednodušuje pochopenie a implementáciu modelu.
 
-![Obrázok 2 Schéma hviezdy pre NorthWind](https://github.com/Wilkwarin/Northwind/blob/main/Obr%C3%A1zok%202%20Sch%C3%A9ma%20hviezdy%20pre%20NorthWind.png)
+![Obrázok 2 Schéma hviezdy pre NorthWind](https://github.com/Wilkwarin/Northwind/blob/main/Sch%C3%A9ma%20hviezdy%20pre%20NorthWind.png)
  
 *Obrázok 2 Schéma hviezdy pre NorthWind*
 
