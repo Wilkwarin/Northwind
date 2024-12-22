@@ -104,10 +104,10 @@ Cudzie kľúče:
 - ProductID — identifikátor produktu (prepojenie s dimenziou DM_Products).
 - SupplierID — identifikátor dodávateľa (prepojenie s dimenziou DM_Suppliers).
 - CustomerID — identifikátor zákazníka (prepojenie s dimenziou DM_Customers).
-- EmployeeID — identifikátor zamestnanca (prepojenie s dimenziou DM_Employees).
 - DateID — identifikátor dátumu objednávky (prepojenie s dimenziou DM_Date).
 
 Metriky:
+- EmployeeAgeAtOrder - vek zamestnanca v čase spracovania objednávky.
 - Quantity — počet predaných jednotiek produktu.
 - Suma — celková suma transakcie, vypočítaná ako Quantity * Cena (kde Cena pochádza z DM_Products).
 
@@ -115,7 +115,7 @@ Metriky:
 
 DM_Products:
 - Obsahuje informácie o produktoch vrátane názvu (ProductName), kategórie (ProductCategory), jednotky (Unit) a ceny (Price).
-- Typ dimenzie: SCD typu 1 (Slowly Changing Dimension Type 1 - Keď sa údaje v dimenzii zmenia, staré údaje sú úplne nahradené novými. História zmien sa pritom neuchováva).
+- Typ dimenzie: SCD typu 1 (Slowly Changing Dimension Type 1 - keď sa údaje v dimenzii zmenia, staré údaje sú úplne nahradené novými. História zmien sa pritom neuchováva).
 
 DM_Suppliers:
 - Obsahuje informácie o dodávateľoch vrátane mesta (City) a krajiny (Country).
@@ -125,10 +125,6 @@ DM_Customers:
 - Obsahuje geografické údaje o zákazníkoch, ako sú mesto (City) a krajina (Country).
 - Typ dimenzie: SCD typu 1 (aktuálne údaje).
 
-DM_Employees:
-- Obsahuje údaje o zamestnancoch, konkrétne ich vek (Age) v čase spracovania objednávky.
-- Typ dimenzie: SCD typu 1 (aktuálne údaje).
-
 DM_Date:
 - Obsahuje informácie o dátumoch objednávok (OrderDate), vrátane roku (Year), mesiaca (Month) a dňa (Day).
 - Typ dimenzie: Statická (nemenná - údaje v dimenzii sa časom nemenia).
@@ -136,7 +132,7 @@ DM_Date:
 Štruktúra hviezdicového modelu je znázornená na diagrame nižšie. Diagram ukazuje prepojenia medzi faktovou tabuľkou a dimenziami, čo zjednodušuje pochopenie a implementáciu modelu.
 
 ![Obrázok 2 Schéma hviezdy pre NorthWind](https://github.com/Wilkwarin/Northwind/blob/main/Obr%C3%A1zok%202%20Sch%C3%A9ma%20hviezdy%20pre%20NorthWind.png)
-
+ 
 *Obrázok 2 Schéma hviezdy pre NorthWind*
 
 ---
