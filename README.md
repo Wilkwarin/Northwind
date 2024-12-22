@@ -549,9 +549,8 @@ GROUP BY ShipperID
 ORDER BY ShipperID;
 ```
 # Odkazy
-[Snowflake](https://app.snowflake.com/)
-
-Diagrama bola vytvorená v programe [MySQLWorkbench](https://www.mysql.com/products/workbench/)
+- [Snowflake](https://app.snowflake.com/)
+- Diagrama bola vytvorená v programe [MySQLWorkbench](https://www.mysql.com/products/workbench/)
 
 ---
 
