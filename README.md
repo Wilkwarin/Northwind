@@ -77,7 +77,7 @@ OrderDetails — podrobnosti objednávok:
 
 Účelom ETL procesu bolo tieto dáta pripraviť, transformovať a sprístupniť pre viacdimenzionálnu analýzu.
 
-### 1.1 Dátová architektúra
+### 1.1. Dátová architektúra
 ERD diagram
 Surové dáta sú usporiadané v relačnom modeli, ktorý je znázornený na entitno-relačnom diagrame (ERD):
 
@@ -87,7 +87,7 @@ Surové dáta sú usporiadané v relačnom modeli, ktorý je znázornený na ent
 
 ---
 
-# 2 Návrh dimenzionálneho modelu
+# 2. Návrh dimenzionálneho modelu
 
 Navrhnutý bol hviezdicový model (star schema), kde centrálny bod predstavuje faktová tabuľka Fact_Sales, ktorá je prepojená s nasledujúcimi dimenziami:
 
@@ -141,7 +141,7 @@ DM_Date:
 
 ETL proces pozostával z troch hlavných fáz: extrahovanie (Extract), transformácia (Transform) a načítanie (Load). Tento proces bol implementovaný v Snowflake s cieľom pripraviť zdrojové dáta zo staging vrstvy do viacdimenzionálneho modelu vhodného na analýzu a vizualizáciu.
 
-## 3.1 Príprava databázy (Setup)
+## 3.1. Príprava databázy (Setup)
 
 Na začiatku boli vytvorené základné komponenty Snowflake: dátový sklad (warehouse), databáza a tabuľky pre viacdimenzionálny model.
 
@@ -207,7 +207,7 @@ CREATE OR REPLACE TABLE DM_Date (
 );
 ```
 
-## 3.2 Extract (Extrahovanie dát)
+## 3.2. Extract (Extrahovanie dát)
 
 Dáta zo zdrojového datasetu (formát .csv) boli najprv nahraté do Snowflake prostredníctvom interného stage úložiska s názvom COBRA_NorthWindStage. Stage v Snowflake slúži ako dočasné úložisko na import alebo export dát. Vytvorenie stage bolo zabezpečené príkazom:
 ```sql
@@ -229,11 +229,11 @@ CSV súbory boli následne manuálne nahraté do stage prostredníctvom webovéh
 LIST @COBRA_NorthWindStage;
 ```
 
-## 3.3 Transform (Transformácia dát)
+## 3.3. Transform (Transformácia dát)
 
 Transformácia dát zahŕňala vytvorenie dočasných tabuliek, načítanie dát z CSV súborov a ich prípravu na načítanie do tabuliek dimenzií a faktov.
 
-### 3.3.1 Načítanie zákazníkov (Customers)
+### 3.3.1. Načítanie zákazníkov (Customers)
 
 Dočasná tabuľka pre zákazníkov bola vytvorená nasledovne:
 ```sql
@@ -253,17 +253,7 @@ COPY INTO Temp_Customers
 FROM @COBRA_NorthWindStage/Customers.csv
 FILE_FORMAT = CSV_FORMAT;
 ```
-Do dimenzionálnej tabuľky DM_Customers boli následne nahrané iba relevantné údaje (CustomerID, City, Country):
-```sql
-INSERT INTO DM_Customers (CustomerID, City, Country)
-SELECT 
-    CustomerID,
-    City,
-    Country
-FROM Temp_Customers;
-```
-
-### 3.3.2 Načítanie dodávateľov (Suppliers)
+### 3.3.2. Načítanie dodávateľov (Suppliers)
 
 Podobný postup bol použitý na načítanie dodávateľov:
 ```sql
@@ -284,17 +274,8 @@ COPY INTO Temp_Suppliers
 FROM @COBRA_NorthWindStage/Suppliers.csv
 FILE_FORMAT = CSV_FORMAT;
 ```
-Vloženie relevantných údajov do DM_Suppliers:
-```sql
-INSERT INTO DM_Suppliers (SupplierID, City, Country)
-SELECT 
-    SupplierID,
-    City,
-    Country
-FROM Temp_Suppliers;
-```
 
-### 3.3.3 Príprava produktov (Products)
+### 3.3.3. Príprava produktov (Products)
 Dočasná tabuľka pre produkty:
 ```sql
 CREATE OR REPLACE TEMPORARY TABLE Temp_Products (
@@ -326,22 +307,8 @@ COPY INTO Temp_Categories
 FROM @COBRA_NorthWindStage/Categories.csv
 FILE_FORMAT = CSV_FORMAT;
 ```
-Vloženie produktov do DM_Products:
-```sql
-    INSERT INTO DM_Products (ProductID, ProductName, ProductCategory, Unit, Price)
-    SELECT 
-        p.ProductID,
-        p.ProductName,
-        c.CategoryName AS ProductCategory,
-        p.Unit,
-        p.Price
-    FROM Temp_Products p
-    JOIN Temp_Categories c ON p.CategoryID = c.CategoryID;
-```
 
-### 3.3.4 Príprava dátumu objednávok (Date)
-
-Unikátne dátumy boli extrahované z objednávok a priradené k nim identifikátory DateID:
+### 3.3.4. Príprava dátumu objednávok (Date)
 
 Vytvorenie dočasnej tabuľky pre objednávky:
 ```sql
@@ -359,7 +326,43 @@ COPY INTO Temp_Orders
 FROM @COBRA_NorthWindStage/Orders.csv
 FILE_FORMAT = CSV_FORMAT;
 ```
-Extrahovanie unikátnych dátumov a vloženie do DM_Date:
+
+## 3.4. Load (Načítanie dát do faktovej tabuľky)
+
+Do dimenzionálnej tabuľky DM_Customers boli nahrané iba relevantné údaje (CustomerID, City, Country):
+```sql
+INSERT INTO DM_Customers (CustomerID, City, Country)
+SELECT 
+    CustomerID,
+    City,
+    Country
+FROM Temp_Customers;
+```
+
+Vloženie relevantných údajov do DM_Suppliers:
+```sql
+INSERT INTO DM_Suppliers (SupplierID, City, Country)
+SELECT 
+    SupplierID,
+    City,
+    Country
+FROM Temp_Suppliers;
+```
+
+Vloženie produktov do DM_Products:
+```sql
+    INSERT INTO DM_Products (ProductID, ProductName, ProductCategory, Unit, Price)
+    SELECT 
+        p.ProductID,
+        p.ProductName,
+        c.CategoryName AS ProductCategory,
+        p.Unit,
+        p.Price
+    FROM Temp_Products p
+    JOIN Temp_Categories c ON p.CategoryID = c.CategoryID;
+```
+
+Extrahovanie unikátnych dátumov, priradenie k nim identifikátory DateID a vloženie do DM_Date:
 ```sql
 INSERT INTO DM_Date (DateID, OrderDate, OrderYear, OrderMonth, OrderDay)
 SELECT 
@@ -374,9 +377,8 @@ FROM (
 ) AS DistinctOrders;
 ```
 
-## 3.4 Load (Načítanie dát do faktovej tabuľky)
-
-Faktová tabuľka Fact_Sales bola naplnená spojením dát z rôznych dočasných tabuliek (Temp_Orders, Temp_OrderDetails, Temp_Employees, Temp_Products) a dimenzionálnej tabuľky DM_Date. Kľúčové kroky:
+Faktová tabuľka Fact_Sales bola naplnená spojením dát z rôznych dočasných tabuliek (Temp_Orders, Temp_OrderDetails, Temp_Employees, Temp_Products) a dimenzionálnej tabuľky DM_Date. 
+Kľúčové kroky:
 
 Načítanie detailov objednávok:
 ```sql
@@ -430,4 +432,20 @@ JOIN Temp_Products tp ON od.ProductID = tp.ProductID
 JOIN DM_Date d ON o.OrderDate = d.OrderDate
 JOIN Temp_Employees te ON o.EmployeeID = te.EmployeeID;
 ```
+
+Po úspešnom vytvorení dimenzií a faktovej tabuľky boli dáta nahraté do finálnej štruktúry. Na záver boli staging tabuľky odstránené, aby sa optimalizovalo využitie úložiska:
+```sql
+DROP TABLE IF EXISTS Temp_Customers;
+DROP TABLE IF EXISTS Temp_Suppliers;
+DROP TABLE IF EXISTS Temp_Employees;
+DROP TABLE IF EXISTS Temp_Orders;
+DROP TABLE IF EXISTS Temp_Products;
+DROP TABLE IF EXISTS Temp_Categories;
+DROP TABLE IF EXISTS Temp_OrderDetails;
+```
+ETL proces v Snowflake umožnil spracovanie pôvodných dát z .csv formátu do viacdimenzionálneho modelu typu hviezda. Tento proces zahŕňal čistenie, obohacovanie a reorganizáciu údajov. Výsledný model umožňuje analýzu predajov, správanie zákazníkov a výkonnosť zamestnancov, pričom poskytuje základ pre vizualizácie a reporty.
+---
+# 4. Vizualizácia dát.
+
+
 
